@@ -23,8 +23,10 @@ env:
 
 jobs:
   Linux_Build:
-    # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    # Disabled: this fork currently focuses on Windows builds only.
+    # To re-enable, delete the 'if: false' line below and restore:
+    # if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -116,8 +118,10 @@ jobs:
           key: ${{ steps.restore-build-ccache.outputs.cache-primary-key }}
 
   Mac_Build:
-    # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    # Disabled: this fork currently focuses on Windows builds only.
+    # To re-enable, delete the 'if: false' line below and restore:
+    # if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -435,8 +439,10 @@ jobs:
           if-no-files-found: error
 
   FreeBSD_Build:
-      # Only run push event on master branch of main repo, but run all PRs
-    if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+      # Disabled: this fork currently focuses on Windows builds only.
+      # To re-enable, delete the 'if: false' line below and restore:
+      # if: github.event_name != 'push' || (github.repository == 'RPCS3/rpcs3' && github.ref_name == 'master')
+    if: false
     name: RPCS3 FreeBSD 
     runs-on: ubuntu-latest
     timeout-minutes: 60
