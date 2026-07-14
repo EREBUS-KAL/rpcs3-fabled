@@ -262,6 +262,7 @@ struct cfg_root : cfg::node
 		cfg::string audio_device{ this, "Audio Device", "@@@default@@@", true };
 		cfg::_int<0, 200> volume{ this, "Master Volume", 100, true };
 		cfg::_bool enable_buffering{ this, "Enable Buffering", true, true };
+		cfg::_bool low_latency_streaming{ this, "Low Latency Streaming", false, true }; // Halve the backend stream period floor (Cubeb: ~10.7ms -> ~5.3ms) to reduce output latency on modern audio stacks
 		cfg::_int <4, 250> desired_buffer_duration{ this, "Desired Audio Buffer Duration", 34, true };
 		cfg::_bool enable_time_stretching{ this, "Enable Time Stretching", false, true };
 		cfg::_bool disable_sampling_skip{ this, "Disable Sampling Skip", false, true };

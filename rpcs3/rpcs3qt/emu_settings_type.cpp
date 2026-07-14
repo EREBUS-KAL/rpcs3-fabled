@@ -162,6 +162,7 @@ const std::map<emu_settings_type, cfg_location> settings_location =
 	{ emu_settings_type::AudioChannelLayout,      get_cfg_location(local_cfg.audio.channel_layout) },
 	{ emu_settings_type::MasterVolume,            get_cfg_location(local_cfg.audio.volume) },
 	{ emu_settings_type::EnableBuffering,         get_cfg_location(local_cfg.audio.enable_buffering) },
+	{ emu_settings_type::LowLatencyStreaming,     get_cfg_location(local_cfg.audio.low_latency_streaming) },
 	{ emu_settings_type::AudioBufferDuration,     get_cfg_location(local_cfg.audio.desired_buffer_duration) },
 	{ emu_settings_type::EnableTimeStretching,    get_cfg_location(local_cfg.audio.enable_time_stretching) },
 	{ emu_settings_type::TimeStretchingThreshold, get_cfg_location(local_cfg.audio.time_stretching_threshold) },

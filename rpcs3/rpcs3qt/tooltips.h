@@ -75,6 +75,7 @@ public:
 		const QString audio_channel_layout      = tr("Determines the sound format of RPCS3.\nUse 'Auto' to let RPCS3 decide the best format based on the audio device and the emulated audio format.");
 		const QString master_volume             = tr("Controls the overall volume of the emulation.\nValues above 100% might reduce the audio quality.");
 		const QString enable_buffering          = tr("Enables audio buffering, which reduces crackle/stutter but increases audio latency.");
+		const QString low_latency_streaming     = tr("Requests a smaller audio stream period from the audio backend (Cubeb: ~5.3 ms instead of ~10.7 ms), which reduces output latency and lets lower Audio Buffer Duration values take effect.\nRecommended for rhythm games. Disable if you experience crackling that buffering does not fix.");
 		const QString audio_buffer_duration     = tr("Target buffer duration in milliseconds.\nHigher values make the buffering algorithm's job easier, but may introduce noticeable audio latency.");
 		const QString enable_time_stretching    = tr("Enables time stretching - requires buffering to be enabled.\nReduces crackle/stutter further, but may cause a very noticeable reduction in audio quality on slower CPUs.");
 		const QString time_stretching_threshold = tr("Buffer fill level (in percentage) below which time stretching will start.");
