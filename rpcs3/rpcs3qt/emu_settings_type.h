@@ -154,6 +154,7 @@ enum class emu_settings_type
 	AudioChannelLayout,
 	MasterVolume,
 	EnableBuffering,
+	LowLatencyStreaming,
 	AudioBufferDuration,
 	EnableTimeStretching,
 	TimeStretchingThreshold,

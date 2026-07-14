@@ -4,6 +4,7 @@
 #include "RB3MidiDrums.h"
 #include "Emu/Cell/lv2/sys_usbd.h"
 #include "Emu/Io/rb3drums_config.h"
+#include "Emu/system_config.h"
 
 using namespace std::chrono_literals;
 
@@ -515,7 +516,7 @@ void usb_device_rb3_midi_drums::interrupt_transfer(u32 buf_size, u8* buf, u32 /*
 	transfer->expected_result = HC_CC_NOERR;
 	// the real device takes 8ms to send a response, but there is
 	// no reason we can't make it faster
-	transfer->expected_time = get_timestamp() + 1'000;
+	transfer->expected_time = get_timestamp() + g_cfg.io.usb_instrument_response;
 
 	const auto& bytes = controller::default_state;
 	if (buf_size < bytes.size())

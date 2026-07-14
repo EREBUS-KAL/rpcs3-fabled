@@ -4,6 +4,7 @@
 #include <cstdarg>
 #include "util/logs.hpp"
 #include "Emu/Audio/audio_device_enumerator.h"
+#include "Emu/system_config.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -105,6 +106,9 @@ bool CubebBackend::Open(std::string_view dev_id, AudioFreq freq, AudioSampleSize
 	Close();
 	std::lock_guard lock{m_cb_mutex};
 
+	// Capture the latency mode for the lifetime of this stream
+	m_low_latency = static_cast<bool>(g_cfg.audio.low_latency_streaming);
+
 	const bool use_default_device = dev_id.empty() || dev_id == audio_device_enumerator::DEFAULT_DEV_ID;
 
 	if (use_default_device) Cubeb.notice("Trying to open default device");
@@ -169,7 +173,7 @@ bool CubebBackend::Open(std::string_view dev_id, AudioFreq freq, AudioSampleSize
 		min_latency = 0;
 	}
 
-	const u32 stream_latency = std::max(static_cast<u32>(AUDIO_MIN_LATENCY * get_sampling_rate()), min_latency);
+	const u32 stream_latency = std::max(static_cast<u32>(min_stream_latency() * get_sampling_rate()), min_latency);
 
 	if (int err = cubeb_stream_init(m_ctx, &m_stream, "Main stream", nullptr, nullptr, device.handle, &stream_param, stream_latency, data_cb, state_cb, this))
 	{
@@ -250,7 +254,7 @@ f64 CubebBackend::GetCallbackFrameLen()
 	if (m_stream == nullptr)
 	{
 		Cubeb.error("GetCallbackFrameLen() called uninitialized");
-		return AUDIO_MIN_LATENCY;
+		return min_stream_latency();
 	}
 
 	u32 stream_latency{};
@@ -260,7 +264,7 @@ f64 CubebBackend::GetCallbackFrameLen()
 		stream_latency = 0;
 	}
 
-	return std::max<f64>(AUDIO_MIN_LATENCY, static_cast<f64>(stream_latency) / get_sampling_rate());
+	return std::max<f64>(min_stream_latency(), static_cast<f64>(stream_latency) / get_sampling_rate());
 }
 
 CubebBackend::device_handle CubebBackend::GetDevice(std::string_view dev_id)

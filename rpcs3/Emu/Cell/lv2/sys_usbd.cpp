@@ -1552,6 +1552,9 @@ error_code sys_usbd_transfer_data(ppu_thread& ppu, u32 handle, u32 id_pipe, vm::
 	if (transfer.fake)
 	{
 		usbh.push_fake_transfer(&transfer);
+
+		// Wake the handler thread so the transfer completes at its expected time instead of the next scheduled wake-up
+		thread_ctrl::notify(usbh);
 	}
 
 	// returns an identifier specific to the transfer
@@ -1589,6 +1592,9 @@ error_code sys_usbd_isochronous_transfer_data(ppu_thread& ppu, u32 handle, u32 i
 	if (transfer.fake)
 	{
 		usbh.push_fake_transfer(&transfer);
+
+		// Wake the handler thread so the transfer completes at its expected time instead of the next scheduled wake-up
+		thread_ctrl::notify(usbh);
 	}
 
 	// returns an identifier specific to the transfer

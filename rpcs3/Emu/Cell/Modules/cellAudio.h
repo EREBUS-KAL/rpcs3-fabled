@@ -207,6 +207,7 @@ struct cell_audio_config
 	{
 		std::string audio_device{};
 		bool buffering_enabled = false;
+		bool low_latency_streaming = false;
 		s64 desired_buffer_duration = 0;
 		bool enable_time_stretching = false;
 		s64 time_stretching_threshold = 0;

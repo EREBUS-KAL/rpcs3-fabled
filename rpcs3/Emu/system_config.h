@@ -262,12 +262,14 @@ struct cfg_root : cfg::node
 		cfg::string audio_device{ this, "Audio Device", "@@@default@@@", true };
 		cfg::_int<0, 200> volume{ this, "Master Volume", 100, true };
 		cfg::_bool enable_buffering{ this, "Enable Buffering", true, true };
+		cfg::_bool low_latency_streaming{ this, "Low Latency Streaming", false, true }; // Halve the backend stream period floor (Cubeb: ~10.7ms -> ~5.3ms) to reduce output latency on modern audio stacks
 		cfg::_int <4, 250> desired_buffer_duration{ this, "Desired Audio Buffer Duration", 34, true };
 		cfg::_bool enable_time_stretching{ this, "Enable Time Stretching", false, true };
 		cfg::_bool disable_sampling_skip{ this, "Disable Sampling Skip", false, true };
 		cfg::_int<0, 100> time_stretching_threshold{ this, "Time Stretching Threshold", 75, true };
 		cfg::_enum<microphone_handler> microphone_type{ this, "Microphone Type", microphone_handler::null };
 		cfg::string microphone_devices{ this, "Microphone Devices", "@@@@@@@@@@@@" };
+		cfg::uint<1'000, 16'000> microphone_polling_interval{ this, "Microphone polling interval (microseconds)", 5'333, true }; // Capture drain/event cadence; lower values reduce mic input latency
 		cfg::_enum<music_handler> music{ this, "Music Handler", music_handler::qt };
 	} audio{ this };
 
@@ -289,6 +291,7 @@ struct cfg_root : cfg::node
 		cfg::_enum<pad_handler_mode> pad_mode{this, "Pad handler mode", pad_handler_mode::single_threaded, true};
 		cfg::_bool keep_pads_connected{this, "Keep pads connected", false, true};
 		cfg::uint<0, 100'000> pad_sleep{this, "Pad handler sleep (microseconds)", 1'000, true};
+		cfg::uint<100, 1'000> usb_instrument_response{this, "Emulated USB instrument response time (microseconds)", 1'000, true}; // Emulated interrupt transfer completion time for rhythm game instruments
 		cfg::_bool background_input_enabled{this, "Background input enabled", true, true};
 		cfg::_bool show_move_cursor{this, "Show move cursor", false, true};
 		cfg::_bool paint_move_spheres{this, "Paint move spheres", false, true};

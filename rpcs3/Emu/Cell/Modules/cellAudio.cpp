@@ -614,6 +614,7 @@ namespace audio
 		{
 			.audio_device = g_cfg.audio.audio_device,
 			.buffering_enabled = static_cast<bool>(g_cfg.audio.enable_buffering),
+			.low_latency_streaming = static_cast<bool>(g_cfg.audio.low_latency_streaming),
 			.desired_buffer_duration = g_cfg.audio.desired_buffer_duration,
 			.enable_time_stretching = static_cast<bool>(g_cfg.audio.enable_time_stretching),
 			.time_stretching_threshold = g_cfg.audio.time_stretching_threshold,
@@ -642,6 +643,7 @@ namespace audio
 				raw.audio_device != new_raw.audio_device ||
 				raw.desired_buffer_duration != new_raw.desired_buffer_duration ||
 				raw.buffering_enabled != new_raw.buffering_enabled ||
+				raw.low_latency_streaming != new_raw.low_latency_streaming ||
 				raw.time_stretching_threshold != new_raw.time_stretching_threshold ||
 				raw.enable_time_stretching != new_raw.enable_time_stretching ||
 				raw.convert_to_s16 != new_raw.convert_to_s16 ||

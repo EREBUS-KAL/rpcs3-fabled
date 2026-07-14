@@ -29,8 +29,16 @@ public:
 	void Pause() override;
 
 private:
-	static constexpr f64 AUDIO_MIN_LATENCY = 512.0 / 48000; // 10ms
+	static constexpr f64 AUDIO_MIN_LATENCY = 512.0 / 48000; // ~10.7ms
+	static constexpr f64 AUDIO_MIN_LATENCY_LOW = 256.0 / 48000; // ~5.3ms
 
+	// Stream period floor in seconds. Captured from config on Open().
+	f64 min_stream_latency() const
+	{
+		return m_low_latency ? AUDIO_MIN_LATENCY_LOW : AUDIO_MIN_LATENCY;
+	}
+
+	bool m_low_latency = false;
 	cubeb* m_ctx = nullptr;
 	cubeb_stream* m_stream = nullptr;
 #ifdef _WIN32

@@ -1143,6 +1143,9 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 	m_emu_settings->EnhanceCheckBox(ui->enableBuffering, emu_settings_type::EnableBuffering);
 	SubscribeTooltip(ui->enableBuffering, tooltips.settings.enable_buffering);
 
+	m_emu_settings->EnhanceCheckBox(ui->lowLatencyStreaming, emu_settings_type::LowLatencyStreaming);
+	SubscribeTooltip(ui->lowLatencyStreaming, tooltips.settings.low_latency_streaming);
+
 	m_emu_settings->EnhanceCheckBox(ui->enableTimeStretching, emu_settings_type::EnableTimeStretching);
 	SubscribeTooltip(ui->enableTimeStretching, tooltips.settings.enable_time_stretching);
 

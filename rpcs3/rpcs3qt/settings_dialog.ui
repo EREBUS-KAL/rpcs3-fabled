@@ -1302,6 +1302,13 @@
                 </widget>
                </item>
                <item>
+                <widget class="QCheckBox" name="lowLatencyStreaming">
+                 <property name="text">
+                  <string>Low Latency Streaming</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QWidget" name="audio_buffer_duration" native="true">
                  <layout class="QVBoxLayout" name="layout_audio_buffer_duration">
                   <property name="leftMargin">
