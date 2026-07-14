@@ -4,9 +4,8 @@ defaults:
   run:
     shell: bash
 on:
-  push:
-    branches:
-      - master # Only trigger push event on 'master' branch
+  # Push builds are handled by windows-build.yml for this fork.
+  # This workflow only runs for PR checks and manual dispatch.
   pull_request:
   workflow_dispatch:
 
