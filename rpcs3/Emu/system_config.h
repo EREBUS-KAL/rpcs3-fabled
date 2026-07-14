@@ -290,6 +290,7 @@ struct cfg_root : cfg::node
 		cfg::_enum<pad_handler_mode> pad_mode{this, "Pad handler mode", pad_handler_mode::single_threaded, true};
 		cfg::_bool keep_pads_connected{this, "Keep pads connected", false, true};
 		cfg::uint<0, 100'000> pad_sleep{this, "Pad handler sleep (microseconds)", 1'000, true};
+		cfg::uint<100, 1'000> usb_instrument_response{this, "Emulated USB instrument response time (microseconds)", 1'000, true}; // Emulated interrupt transfer completion time for rhythm game instruments
 		cfg::_bool background_input_enabled{this, "Background input enabled", true, true};
 		cfg::_bool show_move_cursor{this, "Show move cursor", false, true};
 		cfg::_bool paint_move_spheres{this, "Paint move spheres", false, true};
