@@ -92,8 +92,6 @@ void fmt_class_string<fmt::alc_error>::format(std::string& out, u64 arg)
 
 void mic_context::operator()()
 {
-	// Timestep in microseconds
-	constexpr u64 TIMESTEP = 256ull * 1'000'000ull / 48000ull;
 	u64 timeout = 0;
 
 	while (thread_ctrl::state() != thread_state::aborting)
@@ -113,7 +111,9 @@ void mic_context::operator()()
 		}
 		else
 		{
-			timeout = TIMESTEP - (std::chrono::duration_cast<std::chrono::microseconds>(steady_clock::now().time_since_epoch()).count() % TIMESTEP);
+			// Timestep in microseconds (default 5333 = one 256 sample block at 48kHz)
+			const u64 timestep = g_cfg.audio.microphone_polling_interval;
+			timeout = timestep - (std::chrono::duration_cast<std::chrono::microseconds>(steady_clock::now().time_since_epoch()).count() % timestep);
 		}
 
 		for (auto& mic_entry : mic_list)
@@ -441,7 +441,10 @@ error_code microphone_device::open_microphone(const u8 type, const u32 dsp_r, co
 
 		cellMic.notice("Trying sampling rate %d with %d channel(s)", samplingrate, num_channels);
 
-		device = open_device(devices[0].name, samplingrate, num_al_channels, inbuf_size);
+		// Request half a second of capture buffering (in sample frames, as per the OpenAL spec).
+		// We drain the device every few milliseconds, so this is ample slack, and oversized
+		// requests can inflate the backend's internal fragment size and thus capture latency.
+		device = open_device(devices[0].name, samplingrate, num_al_channels, samplingrate / 2);
 		if (!device)
 		{
 			continue;
@@ -455,7 +458,7 @@ error_code microphone_device::open_microphone(const u8 type, const u32 dsp_r, co
 
 	if (!device)
 	{
-		cellMic.error("Failed to open capture device '%s' (raw_samplingrate=%d, num_al_channels=0x%x, inbuf_size=%d)", devices[0].name, raw_samplingrate, num_al_channels, inbuf_size);
+		cellMic.error("Failed to open capture device '%s' (raw_samplingrate=%d, num_al_channels=0x%x)", devices[0].name, raw_samplingrate, num_al_channels);
 #ifdef _WIN32
 		cellMic.error("Make sure microphone use is authorized under \"Microphone privacy settings\" in windows configuration");
 #endif
@@ -473,12 +476,12 @@ error_code microphone_device::open_microphone(const u8 type, const u32 dsp_r, co
 	{
 		// Open a 2nd microphone into the same device
 		num_al_channels = AL_FORMAT_MONO16;
-		device = open_device(devices[1].name, raw_samplingrate, num_al_channels, inbuf_size);
+		device = open_device(devices[1].name, raw_samplingrate, num_al_channels, raw_samplingrate / 2);
 
 		if (!device)
 		{
 			// Ignore it and move on
-			cellMic.error("Failed to open 2nd SingStar capture device '%s' (raw_samplingrate=%d, num_al_channels=0x%x, inbuf_size=%d)", devices[1].name, raw_samplingrate, num_al_channels, inbuf_size);
+			cellMic.error("Failed to open 2nd SingStar capture device '%s' (raw_samplingrate=%d, num_al_channels=0x%x)", devices[1].name, raw_samplingrate, num_al_channels);
 		}
 		else
 		{

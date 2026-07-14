@@ -51,6 +51,43 @@ adapter — games do not depend on the exact value.
 Range: 100–1000, default 1000. Not exposed in the GUI; edit the config.yml or a
 custom per-game configuration.
 
+### Microphone: smaller capture buffer request (always on)
+
+The microphone code requested a capture ring of 400,000 sample frames (~8.3
+seconds!) from OpenAL — the code comment admitted the value was a guess. Since
+the emulator drains the device every few milliseconds, the request is now half
+a second of frames. Some host audio backends derive their internal fragment
+size from the requested buffer, so an oversized request can directly inflate
+capture latency; this may also help the long-standing PipeWire microphone
+stutter on Linux ([RPCS3 #16772](https://github.com/RPCS3/rpcs3/issues/16772)).
+
+### Microphone: polling interval (`Audio: Microphone polling interval (microseconds)` in config.yml)
+
+The microphone thread drains the capture device and notifies the game on a
+fixed tick, previously hardcoded to 5333 µs (one 256-sample block at 48 kHz).
+Every mic sample batch waits for the next tick, adding on average ~2.7 ms and
+at worst ~5.3 ms to vocal input latency. This option makes the tick
+configurable.
+
+Range: 1000–16000, default 5333 (identical to the old fixed behavior). For
+vocals, try `2000`: it reduces mic drain latency to ~1 ms average with
+negligible CPU cost. Not exposed in the GUI; edit the config.yml or a custom
+per-game configuration:
+
+```yaml
+Audio:
+  Microphone polling interval (microseconds): 2000
+```
+
+### Where vocal echo latency comes from
+
+Total mic-to-speaker echo is roughly: host capture stack + capture drain tick
+(above) + game DSP + audio output buffer (Desired Audio Buffer Duration +
+stream period, see Low Latency Streaming above). The game's calibration
+settings compensate for *constant* latency in note scoring, but the monitoring
+echo you hear is the raw sum — every millisecond removed from either end makes
+singing feel better.
+
 ## Recommended RB3DX configuration
 
 The settings below follow the [MiloHax custom configuration
